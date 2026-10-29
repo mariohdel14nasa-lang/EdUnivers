@@ -1,0 +1,1122 @@
+<!-- ... existing code ... -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts: Space Grotesk & Plus Jakarta Sans -->
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,300..800;1,300..800&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <!-- QR Code Library (EasyQRCodeJS) -->
+    <script src="https://cdn.jsdelivr.net/npm/easyqrcodejs@4.5.0/dist/easy.qrcode.min.js"></script>
+    <!-- HTML5 QR Code Scanner -->
+    <script src="https://unpkg.com/html5-qrcode" type="text/javascript"></script>
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        m3Primary: '#6750A4',
+                        m3OnPrimary: '#FFFFFF',
+                        m3PrimaryContainer: '#EADDFF',
+                        m3OnPrimaryContainer: '#21005D',
+                        m3Secondary: '#625B71',
+                        m3SecondaryContainer: '#E8DEF8',
+                        m3OnSecondaryContainer: '#1D192B',
+                        m3Tertiary: '#136D3B',
+                        m3TertiaryContainer: '#D1E8D5',
+                        m3OnTertiaryContainer: '#00210E',
+                        m3Error: '#B3261E',
+                        m3ErrorContainer: '#F9DEDC',
+                        m3OnErrorContainer: '#410E0B',
+                        m3Background: '#FEF7FF',
+                        m3Surface: '#FEF7FF',
+                        m3SurfaceVariant: '#E7E0EC',
+                        m3OnSurface: '#1C1B1F',
+                        m3OnSurfaceVariant: '#49454F',
+                    },
+                    fontFamily: {
+                        sans: ['"Plus Jakarta Sans"', 'sans-serif'],
+                        display: ['"Space Grotesk"', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background-color: #F8F9FE;
+            color: #1C1B1F;
+            overflow-x: hidden;
+            touch-action: manipulation;
+        }
+
+        .font-display {
+            font-family: 'Space Grotesk', sans-serif;
+        }
+
+        /* Material 3 Expressive Cards & Shadows */
+        .m3-expressive-card {
+            background: #FFFFFF;
+            border-radius: 28px;
+            border: 1px solid rgba(103, 80, 164, 0.12);
+            box-shadow: 0 4px 20px -2px rgba(103, 80, 164, 0.08);
+            transition: all 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+
+        .m3-expressive-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 28px -4px rgba(103, 80, 164, 0.14);
+        }
+
+        /* Subject Cards Grid Item */
+        .subject-card {
+            border-radius: 20px;
+            background: #F3EDF7;
+            border: 2px solid transparent;
+            color: #49454F;
+            transition: all 0.2s ease;
+            cursor: pointer;
+        }
+
+        .subject-card:hover {
+            background: #EADDFF;
+            color: #21005D;
+        }
+
+        .subject-card.active {
+            background: #EADDFF;
+            border-color: #6750A4;
+            color: #21005D;
+            box-shadow: 0 4px 12px rgba(103, 80, 164, 0.2);
+        }
+
+        /* Option Item Buttons */
+        .m3-option-btn {
+            border-radius: 20px;
+            border: 2px solid #E7E0EC;
+            background: #FFFFFF;
+            transition: all 0.2s ease;
+            min-height: 56px;
+        }
+
+        .m3-option-btn:hover {
+            border-color: #6750A4;
+            background: #F3EDF7;
+        }
+
+        .m3-option-btn.selected {
+            border-color: #6750A4;
+            background: #EADDFF;
+            color: #21005D;
+            font-weight: 700;
+        }
+
+        /* Word Bubbles */
+        .word-bubble {
+            border-radius: 16px;
+            background: #F3EDF7;
+            border: 2px solid #E7E0EC;
+            color: #1C1B1F;
+            font-weight: 600;
+            padding: 10px 16px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            user-select: none;
+        }
+
+        .word-bubble:hover {
+            border-color: #6750A4;
+            transform: scale(1.03);
+        }
+
+        .word-bubble.used {
+            opacity: 0.35;
+            pointer-events: none;
+            transform: scale(0.95);
+        }
+
+        /* Matching Item Cards */
+        .match-card {
+            border-radius: 18px;
+            border: 2px solid #E7E0EC;
+            background: #FFFFFF;
+            padding: 12px 16px;
+            font-weight: 600;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            min-height: 52px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .match-card:hover {
+            border-color: #6750A4;
+            background: #F3EDF7;
+        }
+
+        .match-card.selected {
+            border-color: #6750A4;
+            background: #EADDFF;
+            color: #21005D;
+            box-shadow: 0 0 0 3px rgba(103, 80, 164, 0.2);
+        }
+
+        .match-card.matched {
+            border-color: #136D3B;
+            background: #D1E8D5;
+            color: #00210E;
+            opacity: 0.7;
+            pointer-events: none;
+        }
+
+        /* Hide scrollbars for floating bars */
+        .no-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        .no-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+
+        /* Kawaii Moon Floating Animation */
+        @keyframes floatMoon {
+            0%, 100% { transform: translateY(0px) rotate(0deg); }
+            50% { transform: translateY(-6px) rotate(3deg); }
+        }
+
+        .animate-moon {
+            animation: floatMoon 4s ease-in-out infinite;
+        }
+
+        /* Bottom Tab Active Styling */
+        .dock-tab.active {
+            background-color: #4f46e5;
+            color: #ffffff !important;
+            box-shadow: 0 4px 12px rgba(79, 70, 229, 0.35);
+        }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col justify-between pb-28">
+
+    <!-- HEADER DE APLICACIÓN (M3 EXPRESSIVE APP BAR) -->
+    <header class="sticky top-0 z-30 bg-[#FEF7FF]/90 backdrop-blur-md border-b border-m3SurfaceVariant/60 px-4 py-3">
+        <div class="max-w-2xl mx-auto flex items-center justify-between">
+            
+            <!-- Logo + Mascota Kawaii -->
+            <div class="flex items-center gap-3 cursor-pointer" onclick="showLandingScreen()">
+                <div class="relative w-11 h-11 bg-indigo-900 rounded-full flex items-center justify-center shadow-md animate-moon">
+                    <span class="text-2xl">🌕</span>
+                    <span class="absolute -bottom-1 -right-1 text-xs">✨</span>
+                </div>
+                <div>
+                    <h1 class="font-display text-xl font-bold tracking-tight text-m3Primary">EdUnivers</h1>
+                    <span class="text-[10px] uppercase font-bold tracking-widest text-m3Secondary bg-m3SecondaryContainer/60 px-2 py-0.5 rounded-full">Expressive</span>
+                </div>
+            </div>
+
+            <!-- Stats Bar (Hearts, XP, Streak) -->
+            <div id="top-stats-bar" class="hidden flex items-center gap-2 sm:gap-3">
+                <div class="flex items-center gap-1 bg-red-100 text-red-700 px-2.5 py-1 rounded-full text-xs font-bold">
+                    <i class="fa-solid fa-heart text-red-500"></i>
+                    <span id="lives-counter">3</span>
+                </div>
+                <div class="flex items-center gap-1 bg-amber-100 text-amber-800 px-2.5 py-1 rounded-full text-xs font-bold">
+                    <i class="fa-solid fa-bolt text-amber-500"></i>
+                    <span id="xp-counter">0</span> XP
+                </div>
+                <button onclick="openProfileModal()" class="w-9 h-9 rounded-full bg-m3PrimaryContainer text-m3OnPrimaryContainer font-bold text-xs flex items-center justify-center hover:opacity-90 transition-opacity">
+                    <span id="user-avatar-initial">U</span>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- PANTALLA PRINCIPAL / CONTENEDOR DE JUEGO -->
+    <main class="w-full max-w-2xl mx-auto px-4 pt-4 flex-grow flex flex-col justify-center items-center">
+
+        <!-- PANTALLA DE INICIO (LANDING SCREEN) -->
+        <div id="landing-screen" class="w-full text-center flex flex-col items-center py-6">
+            <div class="relative mb-6">
+                <div class="w-28 h-28 bg-indigo-900 rounded-full flex items-center justify-center text-6xl shadow-xl animate-moon mx-auto">
+                    🌕
+                </div>
+                <div class="absolute -top-2 -right-2 bg-m3Primary text-white font-bold text-xs px-3 py-1 rounded-full shadow">
+                    Kawaii v2.5
+                </div>
+            </div>
+
+            <h2 class="font-display text-3xl font-extrabold text-m3OnSurface mb-2">¡Aprende Jugando!</h2>
+            <p class="text-sm text-m3OnSurfaceVariant max-w-md mb-6 leading-relaxed">
+                Selecciona tu materia favorita, completa micro-desafíos dinámicos y comparte tus resultados con amigos vía Código QR.
+            </p>
+
+            <!-- Campo de Nombre -->
+            <div class="w-full max-w-xs mb-6">
+                <label class="block text-xs font-bold text-m3OnSurfaceVariant uppercase tracking-wider mb-2 text-left">
+                    <i class="fa-solid fa-user text-m3Primary"></i> Tu Nombre de Usuario:
+                </label>
+                <input type="text" id="username-input" placeholder="Ej: AlexEdUnivers" 
+                    class="w-full px-4 py-3 rounded-2xl border-2 border-m3SurfaceVariant bg-white text-m3OnSurface font-semibold focus:outline-none focus:border-m3Primary transition-colors text-center text-sm">
+            </div>
+
+            <!-- Selector de Materia -->
+            <div class="w-full max-w-md mb-8 text-left">
+                <span class="block text-xs font-bold text-m3OnSurfaceVariant uppercase tracking-wider mb-3">
+                    <i class="fa-solid fa-book-open text-m3Primary"></i> Elige tu Materia:
+                </span>
+                <div class="grid grid-cols-2 sm:grid-cols-5 gap-2.5" id="subject-selector">
+                    <button onclick="selectSubject('english')" id="subject-btn-english" class="subject-card p-2.5 font-bold text-xs flex flex-col items-center gap-1 active">
+                        <span class="text-2xl">🇬🇧</span>
+                        <span>Inglés</span>
+                    </button>
+                    <button onclick="selectSubject('algebra')" id="subject-btn-algebra" class="subject-card p-2.5 font-bold text-xs flex flex-col items-center gap-1">
+                        <span class="text-2xl">📐</span>
+                        <span>Álgebra</span>
+                    </button>
+                    <button onclick="selectSubject('art')" id="subject-btn-art" class="subject-card p-2.5 font-bold text-xs flex flex-col items-center gap-1">
+                        <span class="text-2xl">🎨</span>
+                        <span>Arte</span>
+                    </button>
+                    <button onclick="selectSubject('science')" id="subject-btn-science" class="subject-card p-2.5 font-bold text-xs flex flex-col items-center gap-1">
+                        <span class="text-2xl">🧪</span>
+                        <span>Ciencia</span>
+                    </button>
+                    <button onclick="selectSubject('geography')" id="subject-btn-geography" class="subject-card p-2.5 font-bold text-xs flex flex-col items-center gap-1">
+                        <span class="text-2xl">🌍</span>
+                        <span>Geografía</span>
+                    </button>
+                    <button onclick="selectSubject('history')" id="subject-btn-history" class="subject-card p-2.5 font-bold text-xs flex flex-col items-center gap-1">
+                        <span class="text-2xl">📜</span>
+                        <span>Historia</span>
+                    </button>
+                    <button onclick="selectSubject('programming')" id="subject-btn-programming" class="subject-card p-2.5 font-bold text-xs flex flex-col items-center gap-1">
+                        <span class="text-2xl">💻</span>
+                        <span>Código</span>
+                    </button>
+                    <button onclick="selectSubject('literature')" id="subject-btn-literature" class="subject-card p-2.5 font-bold text-xs flex flex-col items-center gap-1">
+                        <span class="text-2xl">📚</span>
+                        <span>Literatura</span>
+                    </button>
+                    <button onclick="selectSubject('music')" id="subject-btn-music" class="subject-card p-2.5 font-bold text-xs flex flex-col items-center gap-1">
+                        <span class="text-2xl">🎵</span>
+                        <span>Música</span>
+                    </button>
+                    <button onclick="selectSubject('economy')" id="subject-btn-economy" class="subject-card p-2.5 font-bold text-xs flex flex-col items-center gap-1">
+                        <span class="text-2xl">📊</span>
+                        <span>Economía</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Botones de Acción -->
+            <div class="flex flex-col sm:flex-row gap-3 w-full max-w-xs">
+                <button onclick="startGame()" class="w-full bg-m3Primary text-white font-display font-bold py-3.5 px-6 rounded-full shadow-lg hover:bg-m3Primary/90 transition-all text-sm flex items-center justify-center gap-2">
+                    <i class="fa-solid fa-play"></i> Comenzar Lección
+                </button>
+                <button onclick="openSyncModal()" class="w-full bg-m3SecondaryContainer text-m3OnSecondaryContainer font-bold py-3.5 px-6 rounded-full hover:bg-m3SecondaryContainer/80 transition-all text-sm flex items-center justify-center gap-2">
+                    <i class="fa-solid fa-qrcode"></i> Sincronizar
+                </button>
+            </div>
+        </div>
+
+        <!-- PANTALLA DE AJUSTES -->
+        <div id="settings-screen" class="hidden w-full max-w-md text-center flex flex-col items-center py-6">
+            <h2 class="font-display text-2xl font-bold text-m3OnSurface mb-1">Ajustes del Perfil</h2>
+            <p class="text-xs text-m3Secondary mb-6">Configura tus datos de usuario y sincronización local</p>
+
+            <div class="m3-expressive-card w-full p-6 text-left flex flex-col gap-4 mb-6">
+                <div>
+                    <label class="block text-xs font-bold text-m3OnSurfaceVariant uppercase tracking-wider mb-2">Nombre de Usuario</label>
+                    <input type="text" id="settings-username-input" onchange="updateUsernameFromSettings(this.value)" class="w-full px-4 py-3 rounded-2xl border-2 border-m3SurfaceVariant bg-white text-m3OnSurface font-semibold focus:outline-none focus:border-m3Primary text-sm">
+                </div>
+
+                <div class="flex items-center justify-between p-3 bg-m3SurfaceVariant/40 rounded-2xl">
+                    <div class="flex items-center gap-3">
+                        <i class="fa-solid fa-bolt text-amber-500 text-lg"></i>
+                        <div>
+                            <span class="block font-bold text-xs">XP Total</span>
+                            <span class="text-xs text-m3Secondary" id="settings-xp-display">0 XP</span>
+                        </div>
+                    </div>
+                </div>
+
+                <button onclick="openSyncModal()" class="w-full bg-m3PrimaryContainer text-m3OnPrimaryContainer font-bold py-3 px-4 rounded-xl text-xs hover:opacity-90 flex items-center justify-center gap-2">
+                    <i class="fa-solid fa-qrcode"></i> Ver Código QR / Sincronizar
+                </button>
+            </div>
+        </div>
+
+        <!-- PANTALLA DE JUEGO / RETO -->
+        <div id="game-screen" class="hidden w-full flex-col items-center">
+            
+            <!-- Barra de Progreso Superior -->
+            <div class="w-full mb-6 flex items-center gap-3">
+                <button onclick="showLandingScreen()" class="text-m3OnSurfaceVariant hover:text-m3OnSurface text-lg p-1">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+                <div class="flex-grow bg-m3SurfaceVariant h-3 rounded-full overflow-hidden p-0.5">
+                    <div id="progress-bar" class="bg-m3Primary h-full rounded-full transition-all duration-300" style="width: 0%"></div>
+                </div>
+                <span id="step-indicator" class="text-xs font-bold text-m3Secondary">1/3</span>
+            </div>
+
+            <!-- Header de Materia Activa -->
+            <div class="w-full mb-4 flex items-center justify-between bg-m3SecondaryContainer/50 px-4 py-2 rounded-2xl">
+                <div class="flex items-center gap-2">
+                    <span id="badge-icon" class="text-xl">🇬🇧</span>
+                    <span id="badge-name" class="font-bold text-xs text-m3OnSecondaryContainer">Inglés B2</span>
+                </div>
+                <span id="prompt-text" class="text-xs text-m3Secondary">Demuestra tu conocimiento</span>
+            </div>
+
+            <!-- TARJETA DEL RETO ACTUAL -->
+            <div id="challenge-card" class="w-full max-w-full min-h-[320px] flex flex-col justify-center">
+                <!-- Pregunta inyectada vía JS -->
+            </div>
+        </div>
+
+        <!-- PANTALLA DE COMPLETO / RESULTADOS -->
+        <div id="victory-screen" class="hidden w-full text-center flex-col items-center py-6">
+            <div class="text-6xl mb-4">🎉</div>
+            <h2 class="font-display text-3xl font-bold text-m3Primary mb-1">¡Nivel Completado!</h2>
+            <p class="text-xs text-m3Secondary mb-6">¡Has completado los desafíos con éxito!</p>
+
+            <div class="grid grid-cols-2 gap-4 w-full max-w-xs mb-6">
+                <div class="bg-m3PrimaryContainer/60 p-4 rounded-2xl border border-m3Primary/10">
+                    <span class="block text-2xl font-bold text-m3OnPrimaryContainer" id="gained-xp">+30</span>
+                    <span class="text-[11px] font-bold uppercase tracking-wider text-m3Secondary">XP Ganada</span>
+                </div>
+                <div class="bg-m3TertiaryContainer/60 p-4 rounded-2xl border border-m3Tertiary/10">
+                    <span class="block text-2xl font-bold text-m3OnTertiaryContainer" id="accuracy-rate">100%</span>
+                    <span class="text-[11px] font-bold uppercase tracking-wider text-m3Secondary">Precisión</span>
+                </div>
+            </div>
+
+            <div class="flex flex-col gap-3 w-full max-w-xs">
+                <button onclick="startGame()" class="w-full bg-m3Primary text-white font-bold py-3.5 px-6 rounded-full shadow-lg hover:bg-m3Primary/90 transition-all text-sm flex items-center justify-center gap-2">
+                    <i class="fa-solid fa-rotate-right"></i> Repetir Nivel
+                </button>
+                <button onclick="showLandingScreen()" class="w-full bg-m3SecondaryContainer text-m3OnSecondaryContainer font-bold py-3.5 px-6 rounded-full hover:bg-m3SecondaryContainer/80 transition-all text-sm flex items-center justify-center gap-2">
+                    <i class="fa-solid fa-house"></i> Menú Principal
+                </button>
+            </div>
+        </div>
+
+    </main>
+
+    <!-- BARRA FLOTANTE NAVEGACIÓN PRINCIPAL (Inicio, Lecciones, Ajustes) -->
+    <div id="floating-dock" class="fixed bottom-6 left-1/2 -translate-x-1/2 z-30 w-full max-w-xs px-4 flex justify-center">
+        <nav class="w-full bg-slate-900/95 backdrop-blur-xl border border-white/10 rounded-full p-1.5 shadow-2xl flex items-center justify-around">
+            <button id="nav-home-btn" onclick="navigateToTab('home')" class="dock-tab active px-4 py-2.5 rounded-full text-xs font-bold flex items-center gap-2 text-slate-300 hover:text-white transition-all duration-200">
+                <i class="fa-solid fa-house"></i>
+                <span>Inicio</span>
+            </button>
+            <button id="nav-lessons-btn" onclick="navigateToTab('lessons')" class="dock-tab px-4 py-2.5 rounded-full text-xs font-bold flex items-center gap-2 text-slate-300 hover:text-white transition-all duration-200">
+                <i class="fa-solid fa-book-open"></i>
+                <span>Lecciones</span>
+            </button>
+            <button id="nav-settings-btn" onclick="navigateToTab('settings')" class="dock-tab px-4 py-2.5 rounded-full text-xs font-bold flex items-center gap-2 text-slate-300 hover:text-white transition-all duration-200">
+                <i class="fa-solid fa-gear"></i>
+                <span>Ajustes</span>
+            </button>
+        </nav>
+    </div>
+
+    <!-- FOOTER ERGONÓMICO DE CONTROL (ACTION BAR - SOLO PARA RETOS) -->
+    <footer id="footer-bar" class="hidden fixed bottom-0 left-0 right-0 max-w-md md:max-w-2xl mx-auto bg-[#FEF7FF]/95 backdrop-blur-md border-t border-m3SurfaceVariant/80 p-3 sm:p-4 pb-6 flex items-center justify-between z-20 gap-2 sm:gap-3 shadow-lg">
+        <div id="feedback-sheet" class="w-full flex items-center justify-between">
+            <button id="check-btn" onclick="checkAnswer()" class="w-full bg-m3Primary text-white font-display font-bold py-3.5 px-6 rounded-full shadow-lg hover:bg-m3Primary/90 transition-all text-sm flex items-center justify-center gap-2">
+                Comprobar Respuesta
+            </button>
+        </div>
+    </footer>
+
+    <!-- MODAL SINCRONIZACIÓN Y QR -->
+    <div id="sync-modal" class="hidden fixed inset-0 z-50 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4">
+        <div class="m3-expressive-card w-full max-w-sm p-6 flex flex-col items-center relative text-center">
+            <button onclick="closeSyncModal()" class="absolute top-4 right-4 text-m3OnSurfaceVariant hover:text-m3OnSurface">
+                <i class="fa-solid fa-xmark text-lg"></i>
+            </button>
+            <h3 class="font-display text-xl font-bold text-m3OnSurface mb-1">Compartir Progreso</h3>
+            <p class="text-xs text-m3Secondary mb-4">Sincroniza tus logros con tus amigos vía Código QR</p>
+
+            <div id="qrcode-container" class="bg-white p-3 rounded-2xl border border-m3SurfaceVariant mb-4 flex justify-center items-center min-h-[160px] min-w-[160px]"></div>
+
+            <div class="flex gap-2 w-full">
+                <button onclick="copyDataJSON()" class="flex-1 bg-m3SecondaryContainer text-m3OnSecondaryContainer font-bold py-2.5 px-3 rounded-xl text-xs hover:bg-m3SecondaryContainer/80">
+                    <i class="fa-solid fa-copy"></i> Copiar Datos
+                </button>
+                <button onclick="toggleScanner()" class="flex-1 bg-m3Primary text-white font-bold py-2.5 px-3 rounded-xl text-xs hover:bg-m3Primary/90">
+                    <i class="fa-solid fa-camera"></i> Escanear QR
+                </button>
+            </div>
+
+            <div id="qr-reader" class="w-full mt-3 rounded-xl overflow-hidden hidden border border-m3SurfaceVariant"></div>
+        </div>
+    </div>
+
+    <!-- SCRIPT DE LÓGICA DE JUEGO -->
+    <script>
+        /* ==========================================================================
+           1. BANCO DE DESAFÍOS MULTIDISCIPLINAR
+           ========================================================================== */
+        const subjectsDatabase = {
+            english: {
+                name: 'Inglés B2',
+                icon: '🇬🇧',
+                prompt: 'Demuestra tu nivel de inglés B2',
+                challenges: [
+                    {
+                        type: 'multiple-choice',
+                        illustration: '🗣️',
+                        questionText: '¿Cuál es el significado de "Turn a blind eye"?',
+                        options: [
+                            'Ignorar algo intencionadamente',
+                            'Ver con mucha claridad',
+                            'Estar completamente ciego',
+                            'Mirar fijamente a alguien'
+                        ],
+                        correct: 'Ignorar algo intencionadamente',
+                        explanation: '"To turn a blind eye" es un modismo B2 que significa pretender no notar algo deliberadamente.'
+                    },
+                    {
+                        type: 'word-bubbles',
+                        prompt: 'Construye la oración en orden correcto:',
+                        words: ['had', 'I', 'harder,', 'studied', 'passed.', 'would', 'have', 'If'],
+                        correctOrder: ['If', 'I', 'had', 'studied', 'harder,', 'I', 'would', 'have', 'passed.'],
+                        explanation: 'Uso del Tercer Condicional (If + past perfect, would + have + past participle).'
+                    },
+                    {
+                        type: 'matching',
+                        prompt: 'Empareja los Phrasal Verbs con su significado:',
+                        pairs: [
+                            { left: 'Call off', right: 'Cancelar' },
+                            { left: 'Carry on', right: 'Continuar' },
+                            { left: 'Look up to', right: 'Admirar' },
+                            { left: 'Give up', right: 'Rendirse' }
+                        ],
+                        explanation: 'Los phrasal verbs B2 son fundamentales para la fluidez idiomática.'
+                    }
+                ]
+            },
+            algebra: {
+                name: 'Álgebra',
+                icon: '📐',
+                prompt: 'Resuelve los desafíos algebraicos',
+                challenges: [
+                    {
+                        type: 'multiple-choice',
+                        illustration: '🧮',
+                        questionText: 'Si 3x + 5 = 20, ¿cuál es el valor de x?',
+                        options: ['x = 5', 'x = 3', 'x = 15', 'x = 6'],
+                        correct: 'x = 5',
+                        explanation: '3x = 20 - 5 => 3x = 15 => x = 5.'
+                    },
+                    {
+                        type: 'word-bubbles',
+                        prompt: 'Ordena la fórmula del producto notable:',
+                        words: ['+', '2ab', 'b²', 'a²', '+'],
+                        correctOrder: ['a²', '+', '2ab', '+', 'b²'],
+                        explanation: 'Binomio al cuadrado: (a + b)² = a² + 2ab + b².'
+                    }
+                ]
+            },
+            art: {
+                name: 'Historia Arte',
+                icon: '🎨',
+                prompt: 'Pon a prueba tus conocimientos sobre arte',
+                challenges: [
+                    {
+                        type: 'multiple-choice',
+                        illustration: '🖼️',
+                        questionText: '¿Quién pintó "La Noche Estrellada"?',
+                        options: ['Vincent van Gogh', 'Claude Monet', 'Pablo Picasso', 'Salvador Dalí'],
+                        correct: 'Vincent van Gogh',
+                        explanation: 'Fue pintada en junio de 1889 mientras Van Gogh estaba en Saint-Rémy-de-Provence.'
+                    },
+                    {
+                        type: 'matching',
+                        prompt: 'Empareja cada artista con su movimiento:',
+                        pairs: [
+                            { left: 'Picasso', right: 'Cubismo' },
+                            { left: 'Monet', right: 'Impresionismo' },
+                            { left: 'Dalí', right: 'Surrealismo' },
+                            { left: 'Caravaggio', right: 'Barroco' }
+                        ],
+                        explanation: 'Cada artista lideró o revolucionó su respectiva corriente artística.'
+                    }
+                ]
+            },
+            science: {
+                name: 'Ciencia',
+                icon: '🧪',
+                prompt: 'Descubre los fundamentos científicos',
+                challenges: [
+                    {
+                        type: 'multiple-choice',
+                        illustration: '⚛️',
+                        questionText: '¿Cuál es el elemento más abundante en el universo?',
+                        options: ['Hidrógeno', 'Helio', 'Oxígeno', 'Carbono'],
+                        correct: 'Hidrógeno',
+                        explanation: 'El hidrógeno representa aproximadamente el 75% de la materia elemental del universo.'
+                    }
+                ]
+            },
+            geography: {
+                name: 'Geografía',
+                icon: '🌍',
+                prompt: 'Explora el mundo y sus regiones',
+                challenges: [
+                    {
+                        type: 'multiple-choice',
+                        illustration: '🏔️',
+                        questionText: '¿Cuál es la cordillera más larga del mundo?',
+                        options: ['Los Andes', 'El Himalaya', 'Los Alpes', 'Las Rocosas'],
+                        correct: 'Los Andes',
+                        explanation: 'La cordillera de los Andes se extiende por más de 7.000 km a lo largo de América del Sur.'
+                    }
+                ]
+            },
+            history: {
+                name: 'Historia',
+                icon: '📜',
+                prompt: 'Viaja a través del tiempo y la historia',
+                challenges: [
+                    {
+                        type: 'multiple-choice',
+                        illustration: '🏛️',
+                        questionText: '¿En qué año comenzó la Revolución Francesa?',
+                        options: ['1789', '1776', '1812', '1848'],
+                        correct: '1789',
+                        explanation: 'Inició en 1789 con la toma de la Bastilla el 14 de julio.'
+                    }
+                ]
+            },
+            programming: {
+                name: 'Programación',
+                icon: '💻',
+                prompt: 'Aprende lógica y desarrollo web',
+                challenges: [
+                    {
+                        type: 'multiple-choice',
+                        illustration: '⚡',
+                        questionText: '¿Qué operador compara valor y tipo en JavaScript?',
+                        options: ['===', '==', '=', '!='],
+                        correct: '===',
+                        explanation: 'El operador === verifica tanto el valor como el tipo de dato sin coerción.'
+                    }
+                ]
+            },
+            literature: {
+                name: 'Literatura',
+                icon: '📚',
+                prompt: 'Obras y autores universales',
+                challenges: [
+                    {
+                        type: 'multiple-choice',
+                        illustration: '📖',
+                        questionText: '¿Quién escribió "Cien años de soledad"?',
+                        options: ['Gabriel García Márquez', 'Mario Vargas Llosa', 'Julio Cortázar', 'Jorge Luis Borges'],
+                        correct: 'Gabriel García Márquez',
+                        explanation: 'Obra cumbre del realismo mágico publicada por el premio Nobel colombiano en 1967.'
+                    }
+                ]
+            },
+            music: {
+                name: 'Música',
+                icon: '🎵',
+                prompt: 'Teoría e historia musical',
+                challenges: [
+                    {
+                        type: 'multiple-choice',
+                        illustration: '🎼',
+                        questionText: '¿Cuántas notas componen una escala diatónica mayor?',
+                        options: ['7', '8', '12', '5'],
+                        correct: '7',
+                        explanation: 'La escala diatónica contiene 7 notas distintas antes de repetir la octava.'
+                    }
+                ]
+            },
+            economy: {
+                name: 'Economía',
+                icon: '📊',
+                prompt: 'Conceptos financieros y mercados',
+                challenges: [
+                    {
+                        type: 'multiple-choice',
+                        illustration: '📈',
+                        questionText: '¿Qué mide el Producto Interior Bruto (PIB)?',
+                        options: ['El valor total de bienes y servicios producidos', 'El nivel de inflación anual', 'El consumo de las familias', 'Las exportaciones netas'],
+                        correct: 'El valor total de bienes y servicios producidos',
+                        explanation: 'El PIB indica el tamaño global de la economía de una nación en un periodo determinado.'
+                    }
+                ]
+            }
+        };
+
+        /* ==========================================================================
+           2. ESTADO GLOBAL DE LA APLICACIÓN
+           ========================================================================== */
+        let selectedSubjectKey = 'english';
+        let challenges = subjectsDatabase.english.challenges;
+        let currentStep = 0;
+        let lives = 3;
+        let selectedAnswer = null;
+        let selectedOrder = [];
+        let matchedPairs = {};
+        let selectedLeftPair = null;
+        let correctAnswersCount = 0;
+        let html5QrScanner = null;
+
+        let userProfile = {
+            username: 'Estudiante',
+            xp: 0,
+            lastSubject: 'english'
+        };
+
+        /* Web Audio API Synthesizer */
+        const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+
+        function playTone(freq, type, duration) {
+            try {
+                const osc = audioCtx.createOscillator();
+                const gain = audioCtx.createGain();
+                osc.type = type;
+                osc.frequency.value = freq;
+                gain.gain.setValueAtTime(0.1, audioCtx.currentTime);
+                gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + duration);
+                osc.connect(gain);
+                gain.connect(audioCtx.destination);
+                osc.start();
+                osc.stop(audioCtx.currentTime + duration);
+            } catch (e) {}
+        }
+
+        function playSuccessSound() {
+            playTone(523.25, 'sine', 0.15); // C5
+            setTimeout(() => playTone(659.25, 'sine', 0.25), 100); // E5
+        }
+
+        function playErrorSound() {
+            playTone(220, 'sawtooth', 0.3); // A3
+        }
+
+        /* ==========================================================================
+           3. INICIALIZACIÓN Y NAVEGACIÓN
+           ========================================================================== */
+        window.addEventListener('load', () => {
+            loadUserData();
+            updateSaaSNavbar();
+        });
+
+        function loadUserData() {
+            const saved = localStorage.getItem('edunivers_user');
+            if (saved) {
+                try {
+                    userProfile = JSON.parse(saved);
+                    document.getElementById('username-input').value = userProfile.username || 'Estudiante';
+                    document.getElementById('settings-username-input').value = userProfile.username || 'Estudiante';
+                    document.getElementById('xp-counter').innerText = userProfile.xp || 0;
+                    document.getElementById('settings-xp-display').innerText = `${userProfile.xp || 0} XP`;
+                    document.getElementById('user-avatar-initial').innerText = (userProfile.username || 'E').charAt(0).toUpperCase();
+                    if (userProfile.lastSubject && subjectsDatabase[userProfile.lastSubject]) {
+                        selectSubject(userProfile.lastSubject);
+                    }
+                } catch (e) {}
+            }
+        }
+
+        function saveUserData() {
+            const inputVal = document.getElementById('username-input').value.trim();
+            if (inputVal) userProfile.username = inputVal;
+            localStorage.setItem('edunivers_user', JSON.stringify(userProfile));
+            document.getElementById('xp-counter').innerText = userProfile.xp;
+            document.getElementById('settings-xp-display').innerText = `${userProfile.xp} XP`;
+            document.getElementById('user-avatar-initial').innerText = (userProfile.username || 'E').charAt(0).toUpperCase();
+        }
+
+        function updateUsernameFromSettings(val) {
+            if (val.trim()) {
+                userProfile.username = val.trim();
+                document.getElementById('username-input').value = val.trim();
+                saveUserData();
+            }
+        }
+
+        function navigateToTab(tabName) {
+            document.querySelectorAll('.dock-tab').forEach(btn => btn.classList.remove('active'));
+            document.getElementById(`nav-${tabName}-btn`).classList.add('active');
+
+            document.getElementById('landing-screen').classList.add('hidden');
+            document.getElementById('settings-screen').classList.add('hidden');
+            document.getElementById('game-screen').classList.add('hidden');
+            document.getElementById('victory-screen').classList.add('hidden');
+
+            if (tabName === 'home') {
+                showLandingScreen();
+            } else if (tabName === 'lessons') {
+                document.getElementById('landing-screen').classList.remove('hidden');
+            } else if (tabName === 'settings') {
+                document.getElementById('settings-screen').classList.remove('hidden');
+                document.getElementById('settings-username-input').value = userProfile.username;
+                document.getElementById('settings-xp-display').innerText = `${userProfile.xp} XP`;
+            }
+        }
+
+        function selectSubject(key) {
+            selectedSubjectKey = key;
+            userProfile.lastSubject = key;
+            saveUserData();
+
+            challenges = subjectsDatabase[key].challenges;
+
+            document.querySelectorAll('.subject-card').forEach(btn => btn.classList.remove('active'));
+            const activeBtn = document.getElementById(`subject-btn-${key}`);
+            if (activeBtn) activeBtn.classList.add('active');
+
+            document.getElementById('badge-icon').innerText = subjectsDatabase[key].icon;
+            document.getElementById('badge-name').innerText = subjectsDatabase[key].name;
+            document.getElementById('prompt-text').innerText = subjectsDatabase[key].prompt;
+        }
+
+        function showLandingScreen() {
+            saveUserData();
+            document.getElementById('landing-screen').classList.remove('hidden');
+            document.getElementById('settings-screen').classList.add('hidden');
+            document.getElementById('game-screen').classList.add('hidden');
+            document.getElementById('victory-screen').classList.add('hidden');
+            document.getElementById('top-stats-bar').classList.add('hidden');
+            document.getElementById('footer-bar').classList.add('hidden');
+            document.getElementById('floating-dock').classList.remove('hidden');
+        }
+
+        function startGame() {
+            saveUserData();
+            currentStep = 0;
+            lives = 3;
+            correctAnswersCount = 0;
+            
+            document.getElementById('lives-counter').innerText = lives;
+            document.getElementById('landing-screen').classList.add('hidden');
+            document.getElementById('settings-screen').classList.add('hidden');
+            document.getElementById('victory-screen').classList.add('hidden');
+            document.getElementById('game-screen').classList.remove('hidden');
+            document.getElementById('top-stats-bar').classList.remove('hidden');
+            document.getElementById('footer-bar').classList.remove('hidden');
+            
+            // Ocultar la barra de navegación flotante durante los ejercicios
+            document.getElementById('floating-dock').classList.add('hidden');
+
+            renderChallenge();
+        }
+
+        function restartGame() {
+            startGame();
+        }
+
+        /* ==========================================================================
+           4. RENDERIZADO DE DESAFÍOS
+           ========================================================================== */
+        function renderChallenge() {
+            const card = document.getElementById('challenge-card');
+            const current = challenges[currentStep];
+
+            // Reset footer button
+            const sheet = document.getElementById('feedback-sheet');
+            sheet.innerHTML = `
+                <button id="check-btn" onclick="checkAnswer()" class="w-full bg-m3Primary text-white font-display font-bold py-3.5 px-6 rounded-full shadow-lg hover:bg-m3Primary/90 transition-all text-sm flex items-center justify-center gap-2">
+                    Comprobar Respuesta
+                </button>
+            `;
+
+            // Actualizar progreso
+            const progressPercent = ((currentStep) / challenges.length) * 100;
+            document.getElementById('progress-bar').style.width = `${progressPercent}%`;
+            document.getElementById('step-indicator').innerText = `${currentStep + 1}/${challenges.length}`;
+
+            selectedAnswer = null;
+            selectedOrder = [];
+            matchedPairs = {};
+            selectedLeftPair = null;
+
+            if (current.type === 'multiple-choice') {
+                renderMultipleChoice(card, current);
+            } else if (current.type === 'word-bubbles') {
+                renderWordBubbles(card, current);
+            } else if (current.type === 'matching') {
+                renderMatching(card, current);
+            }
+        }
+
+        function renderMultipleChoice(container, data) {
+            let optionsHTML = data.options.map((opt, i) => `
+                <button onclick="selectOption('${opt.replace(/'/g, "\\'")}', this)" class="m3-option-btn w-full p-4 text-left text-sm font-semibold text-m3OnSurface flex items-center gap-3">
+                    <span class="w-7 h-7 rounded-full bg-m3SurfaceVariant text-m3OnSurfaceVariant flex items-center justify-center text-xs font-bold">${i + 1}</span>
+                    <span>${opt}</span>
+                </button>
+            `).join('');
+
+            container.innerHTML = `
+                <div class="m3-expressive-card p-6 w-full text-center">
+                    <div class="text-5xl mb-3">${data.illustration || '💡'}</div>
+                    <h3 class="font-display text-lg font-bold text-m3OnSurface mb-6 leading-snug">${data.questionText}</h3>
+                    <div class="flex flex-col gap-3">
+                        ${optionsHTML}
+                    </div>
+                </div>
+            `;
+        }
+
+        function selectOption(opt, btn) {
+            document.querySelectorAll('.m3-option-btn').forEach(b => b.classList.remove('selected'));
+            btn.classList.add('selected');
+            selectedAnswer = opt;
+        }
+
+        function renderWordBubbles(container, data) {
+            let shuffled = [...data.words].sort(() => Math.random() - 0.5);
+
+            container.innerHTML = `
+                <div class="m3-expressive-card p-6 w-full text-center">
+                    <span class="text-xs font-bold text-m3Secondary uppercase tracking-wider block mb-2">${data.prompt}</span>
+                    
+                    <!-- Target Area -->
+                    <div id="target-bubbles" class="min-h-[60px] p-3 rounded-2xl bg-m3SurfaceVariant/50 border-2 border-dashed border-m3SurfaceVariant flex flex-wrap gap-2 items-center justify-center mb-6">
+                        <span class="text-xs text-m3OnSurfaceVariant italic pointer-events-none" id="bubble-placeholder">Toca las palabras abajo...</span>
+                    </div>
+
+                    <!-- Source Bubbles -->
+                    <div id="source-bubbles" class="flex flex-wrap gap-2 justify-center">
+                        ${shuffled.map((w, idx) => `
+                            <button onclick="toggleBubble('${w.replace(/'/g, "\\'")}', this)" class="word-bubble" id="wb-${idx}">${w}</button>
+                        `).join('')}
+                    </div>
+                </div>
+            `;
+        }
+
+        function toggleBubble(word, btn) {
+            const placeholder = document.getElementById('bubble-placeholder');
+            if (placeholder) placeholder.remove();
+
+            const target = document.getElementById('target-bubbles');
+
+            if (btn.classList.contains('used')) return;
+
+            btn.classList.add('used');
+            selectedOrder.push({ word, btnId: btn.id });
+
+            const targetBubble = document.createElement('button');
+            targetBubble.className = 'word-bubble bg-m3PrimaryContainer text-m3OnPrimaryContainer border-m3Primary';
+            targetBubble.innerText = word;
+            targetBubble.onclick = () => {
+                targetBubble.remove();
+                btn.classList.remove('used');
+                selectedOrder = selectedOrder.filter(item => item.btnId !== btn.id);
+            };
+
+            target.appendChild(targetBubble);
+        }
+
+        function renderMatching(container, data) {
+            container.innerHTML = `
+                <div class="m3-expressive-card p-6 w-full text-center">
+                    <span class="text-xs font-bold text-m3Secondary uppercase tracking-wider block mb-4">${data.prompt}</span>
+                    
+                    <div class="grid grid-cols-2 gap-3">
+                        <div class="flex flex-col gap-2.5" id="left-pairs">
+                            ${data.pairs.map((p, i) => `
+                                <div onclick="selectLeftMatch('${p.left.replace(/'/g, "\\'")}', this)" class="match-card" data-left="${p.left}">${p.left}</div>
+                            `).join('')}
+                        </div>
+                        <div class="flex flex-col gap-2.5" id="right-pairs">
+                            ${[...data.pairs].sort(() => Math.random() - 0.5).map((p, i) => `
+                                <div onclick="selectRightMatch('${p.right.replace(/'/g, "\\'")}', this)" class="match-card" data-right="${p.right}">${p.right}</div>
+                            `).join('')}
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        function selectLeftMatch(val, el) {
+            if (el.classList.contains('matched')) return;
+            document.querySelectorAll('#left-pairs .match-card').forEach(c => c.classList.remove('selected'));
+            el.classList.add('selected');
+            selectedLeftPair = { val, el };
+        }
+
+        function selectRightMatch(val, el) {
+            if (!selectedLeftPair || el.classList.contains('matched')) return;
+
+            const current = challenges[currentStep];
+            const pairMatch = current.pairs.find(p => p.left === selectedLeftPair.val);
+
+            if (pairMatch && pairMatch.right === val) {
+                playSuccessSound();
+                selectedLeftPair.el.classList.remove('selected');
+                selectedLeftPair.el.classList.add('matched');
+                el.classList.add('matched');
+                matchedPairs[selectedLeftPair.val] = val;
+                selectedLeftPair = null;
+            } else {
+                playErrorSound();
+                el.classList.add('border-m3Error');
+                setTimeout(() => el.classList.remove('border-m3Error'), 500);
+            }
+        }
+
+        /* ==========================================================================
+           5. VERIFICACIÓN Y FEEDBACK
+           ========================================================================== */
+        function checkAnswer() {
+            const current = challenges[currentStep];
+            let isCorrect = false;
+
+            if (current.type === 'multiple-choice') {
+                if (!selectedAnswer) return;
+                isCorrect = selectedAnswer === current.correct;
+            } else if (current.type === 'word-bubbles') {
+                const userWords = selectedOrder.map(o => o.word);
+                isCorrect = JSON.stringify(userWords) === JSON.stringify(current.correctOrder);
+            } else if (current.type === 'matching') {
+                isCorrect = Object.keys(matchedPairs).length === current.pairs.length;
+            }
+
+            const sheet = document.getElementById('feedback-sheet');
+
+            if (isCorrect) {
+                playSuccessSound();
+                correctAnswersCount++;
+                sheet.innerHTML = `
+                    <div class="w-full flex flex-col gap-2">
+                        <div class="flex items-center gap-2 text-m3Tertiary font-bold text-sm">
+                            <i class="fa-solid fa-circle-check text-lg"></i>
+                            <span>¡Excelente! Respuesta correcta</span>
+                        </div>
+                        <p class="text-xs text-m3OnSurfaceVariant text-left">${current.explanation}</p>
+                        <button onclick="nextStep()" class="w-full bg-m3Tertiary text-white font-bold py-3 px-6 rounded-full shadow hover:bg-m3Tertiary/90 transition-all text-sm mt-1">
+                            Continuar
+                        </button>
+                    </div>
+                `;
+            } else {
+                playErrorSound();
+                lives--;
+                document.getElementById('lives-counter').innerText = lives;
+
+                sheet.innerHTML = `
+                    <div class="w-full flex flex-col gap-2">
+                        <div class="flex items-center gap-2 text-m3Error font-bold text-sm">
+                            <i class="fa-solid fa-circle-xmark text-lg"></i>
+                            <span>Solución sugerida:</span>
+                        </div>
+                        <p class="text-xs text-m3OnSurfaceVariant text-left">${current.explanation}</p>
+                        <button onclick="nextStep()" class="w-full bg-m3Error text-white font-bold py-3 px-6 rounded-full shadow hover:bg-m3Error/90 transition-all text-sm mt-1">
+                            Entendido
+                        </button>
+                    </div>
+                `;
+
+                if (lives <= 0) {
+                    setTimeout(() => {
+                        alert('¡Te has quedado sin vidas! Inténtalo de nuevo.');
+                        showLandingScreen();
+                    }, 1000);
+                }
+            }
+        }
+
+        function nextStep() {
+            currentStep++;
+            if (currentStep >= challenges.length) {
+                showVictoryScreen();
+            } else {
+                renderChallenge();
+            }
+        }
+
+        function showVictoryScreen() {
+            userProfile.xp += 30;
+            saveUserData();
+
+            document.getElementById('game-screen').classList.add('hidden');
+            document.getElementById('footer-bar').classList.add('hidden');
+            document.getElementById('victory-screen').classList.remove('hidden');
+            document.getElementById('floating-dock').classList.remove('hidden');
+
+            const accuracy = Math.round((correctAnswersCount / challenges.length) * 100);
+            document.getElementById('gained-xp').innerText = '+30';
+            document.getElementById('accuracy-rate').innerText = `${accuracy}%`;
+        }
+
+        /* ==========================================================================
+           6. MODALES Y QR SYNCHRONIZATION
+           ========================================================================== */
+        function openSyncModal() {
+            document.getElementById('sync-modal').classList.remove('hidden');
+            const qrContainer = document.getElementById('qrcode-container');
+            qrContainer.innerHTML = '';
+
+            const syncData = {
+                u: userProfile.username,
+                xp: userProfile.xp,
+                s: selectedSubjectKey
+            };
+
+            new QRCode(qrContainer, {
+                text: JSON.stringify(syncData),
+                width: 150,
+                height: 150,
+                colorDark: "#6750A4",
+                colorLight: "#FFFFFF",
+                correctLevel: QRCode.CorrectLevel.H
+            });
+        }
+
+        function closeSyncModal() {
+            document.getElementById('sync-modal').classList.add('hidden');
+            if (html5QrScanner) {
+                html5QrScanner.clear();
+            }
+        }
+
+        function copyDataJSON() {
+            const syncData = JSON.stringify(userProfile);
+            navigator.clipboard.writeText(syncData).then(() => {
+                alert('¡Datos copiados al portapapeles!');
+            }).catch(() => {
+                document.execCommand('copy');
+                alert('¡Datos copiados!');
+            });
+        }
+
+        function toggleScanner() {
+            const readerDiv = document.getElementById('qr-reader');
+            readerDiv.classList.toggle('hidden');
+
+            if (!readerDiv.classList.contains('hidden')) {
+                html5QrScanner = new Html5QrcodeScanner("qr-reader", { fps: 10, qrbox: 180 });
+                html5QrScanner.render((decodedText) => {
+                    try {
+                        const imported = JSON.parse(decodedText);
+                        if (imported.u) {
+                            alert(`¡Sincronizado amigo: ${imported.u} con ${imported.xp || 0} XP!`);
+                            closeSyncModal();
+                        }
+                    } catch (e) {
+                        alert('Código QR no válido.');
+                    }
+                });
+            }
+        }
+
+        function openProfileModal() {
+            alert(`Perfil de ${userProfile.username}\nXP Total: ${userProfile.xp}\nMateria Activa: ${subjectsDatabase[selectedSubjectKey].name}`);
+        }
+    </script>
+</body>
+</html>
